@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<form action="{{ url_for('login') }}" method="POST">
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+    {{ form.csrf_token }}
+<input type=submit value=Login>
+</form>
+{% endblock %}
