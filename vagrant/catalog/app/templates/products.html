@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% block title %}Product View{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+<div align=center id="pagination">
+<h3>Products</h3>
+
+</div>
+
+<div style="clear:both;"></div>
+<table class="table" width=98% align=center>
+    <tr><th>&nbsp</th>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>&nbsp</th>
+    </tr>
+{% for product in products %}
+<tr><td>&nbsp</td>
+    <td> {{ product.id }} </td>
+    <td> {{ product.name }} </td>
+    <td> {{ product.description }} </td>
+    <td> <a href="{{ url_for('showProductCategory', id = product.category_id) }}">{{ product.category }}</a> </td>
+<td><a href="{{ url_for('editProduct', id = product.id) }}">Product View</a></td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

@@ -30,7 +30,7 @@
       <nav class="top-bar" data-topbar role="navigation">
           <ul class="title-area">
               <li class="name">
-                  <h1><a href="#">SAM Customer Editor</a>	</h1>
+                  <h1><a href="#">Products</a>	</h1>
               </li>
               <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
               <li class="toggle-topbar menu-icon">
@@ -38,44 +38,18 @@
               </li>
           </ul>
           <section class="top-bar-section">
- {% if g.user.is_authenticated()%}
- <ul class="left">
-<li>
- <a href="{{ url_for('customerList') }}">Customer Edit</a>
-</li>
-<li class="divider" />
-<li>
- <form style="margin: 0; padding: 0; display: block;" action="{{ url_for('search') }}" method="post" name="customer_search">{{ g.search_form.hidden_tag() }}{{ g.search_form.search(size=20) }}
- </li><li><input style="display: inline;" type="submit" value="Search"></li><li>
- </form>
-</li>        </ul>
- <ul class="right">
-     <li>
-      <a href="{{ url_for('users') }}">Edit Users</a>
-     </li><li class="divider" />
-<li>
- <a href="{{ url_for('logout') }}">Logout</a>
-</li>
-</ul>
-              {% endif %}
-              {% if not g.user.is_authenticated()%}
               <!-- Right Nav Section -->
-              <ul class="right">
-                  <li class="active">
-                      <a href="{{ url_for('register') }}">Register</a>
-                  </li>
-                   <li>
-                  <a href="{{ url_for('login') }}">Login</a>
-                  </li>
-              </ul>
+
 
               <!-- Left Nav Section -->
               <ul class="left">
                   <li>
-                  <a href="{{ url_for('customerList') }}">Customer View</a>
+                  <a href="{{ url_for('products') }}">Product View</a>
+                  </li>
+                  <li>
+                  <a href="{{ url_for('categories') }}">Category View</a>
                   </li>
               </ul>
-              {% endif %}
           </section>
 
       </nav>
@@ -93,7 +67,7 @@
     <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer" align=right style="font-size:60%">
       {% block footer %}
-      &copy; Copyright 2015 by Scott Harman SAM Limited
+      &copy; Copyright 2015 by Scott Harman SAM Limited &nbsp
       {% endblock %}
     </div>
     <script src="/static/js/vendor/jquery.js"></script>
