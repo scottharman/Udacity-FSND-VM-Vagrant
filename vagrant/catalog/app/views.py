@@ -8,6 +8,10 @@ from flask import jsonify, render_template
 @app.route('/products/')
 def products():
     """Returns the last 5 products for each category"""
+    """Should have two panels - LHS lists categories, and initial RHS view lists most recent products across all categories plus price and category
+    category and/or product are clickable, to return either the category page or the product page.
+    Users can edit, create, or delete only the items that they created
+    """
     #productItems = access.getProducts()
     #for product in productItems:
     #    product.category = access.getCategory(product.category_id)
