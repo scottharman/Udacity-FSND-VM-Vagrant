@@ -8,27 +8,28 @@
 {% endblock %}
 {% block content %}
 
-<h3>Products</h3>
-{% for category in categories %}
-<h2><a href="{{ url_for('showProductCategory', id = category.category_id) }}">{{ category.category_name }}</a></h2>
+<h3>Products vt Category</h3>
+
+
 <div style="clear:both;"></div>
 <table class="table" width=98% align=center>
-    <tr><th width="50px">&nbsp</th>
-        <th width="20%">Product Name</th>
-        <th width="40%">Description</th>
-        <th with="10%">Price</th>
-
+    <tr><th>&nbsp</th>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Description</th>
+        <th>Price</th>
         <th>&nbsp</th>
     </tr>
-{% for product in products if product.category_id == category.category_id %}
+{% for product in products %}
 <tr><td>&nbsp</td>
+    <td> {{ product.product_id }} </td>
     <td> {{ product.product_name }} </td>
     <td> {{ product.product_description }} </td>
-    <td> ${{ product.price }} </td>
+    <td> {{ product.price }} </td>
 
 <td><a href="{{ url_for('editProduct', id = product.product_id) }}">Product View</a></td>
     </tr>
 {% endfor %}
 </table>
-{% endfor %}
+
 {% endblock %}

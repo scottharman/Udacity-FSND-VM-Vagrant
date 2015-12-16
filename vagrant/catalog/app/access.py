@@ -5,21 +5,25 @@ from sqlalchemy.orm import sessionmaker
 DBsession = sessionmaker(bind=engine)
 session = DBsession()
 
+def getProductCountCategory(cat_id, count):
+    products = session.query(ProductItem).filter(ProductItem.category_id == cat_id).limit(count)  # noqa
+    return products
 
-def showProducts():
+def getProducts():
     """Returns the products as objects"""
     products = session.query(ProductItem).all()
     print products
     return products
 
 
-def showProductCategory(category_id):
+def getProductCategory(cat_id):
     """Returns all the products in the category"""
-    products = session.query(ProductItem).filter(ProductItem.category_id(category_id)).all()  # noqa
+    print cat_id
+    products = session.query(ProductItem).filter(ProductItem.category_id == cat_id).all()  # noqa
     return products
 
 
-def showProduct(id):
+def getProduct(id):
     """Returns the product for the given ID"""
     return
 
@@ -39,12 +43,15 @@ def updateProduct(id):
     return
 
 
-def showCategory(cat_id):
+def getCategory(cat_id):
     print id
 
     category = session.query(Category).filter(Category.category_id==cat_id).first()
-    return category.name
+    return category.category_name
 
+def getCategories():
+    categories = session.query(Category).all()
+    return categories
 
 def addUser():
     """Add a new user"""
