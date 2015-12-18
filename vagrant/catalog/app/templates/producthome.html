@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+{% block title %}Product Homepage{% endblock %}
+{% block page %}Product Homepage{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+
+<h3>Products</h3>
+<section class="left"><ul style="list-style-type:none">
+{% for category in categories %}
+<li><a href="{{ url_for('showProductCategory', id = category.category_id) }}">{{ category.category_name }}</a></li>{% endfor %}</ul></section>
+<section>
+
+
+<dl>
+    {% for product in products %}
+    <dt> <a href="{{ url_for('editProduct', id = product.product_id) }}">{{ product.product_name }}</a> - {{ product.category_name }} (${{ product.price }}) </dt><dd>{{ product.product_description }}</dd>
+
+{% endfor %}
+    </dl>
+
+</section>
+
+{% endblock %}

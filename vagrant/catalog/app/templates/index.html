@@ -16,43 +16,23 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="/static/js/vendor/modernizr.js"></script>
-    <script>
-    jQuery(document).ready(function($) {
-    $(".clickable-row").click(function() {
-        window.document.location = $(this).data("href");
-    });
-});
-</script>
+
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
   </head>
   <body>
-      <nav class="top-bar" data-topbar role="navigation">
-          <ul class="title-area">
-              <li class="name">
-                  <h1><a href="#">Product Catalog</a>	</h1>
-              </li>
-              <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-              <li class="toggle-topbar menu-icon">
-                  <a href="#"><span>Menu</span></a>
-              </li>
-          </ul>
-          <section class="top-bar-section">
-              <!-- Right Nav Section -->
-
-
-              <!-- Left Nav Section -->
-              <ul class="left">
-                  <li>
+      <header>
+                  <h1>{% block page %}{% endblock %}</h1>
+    </header>
+<nav><span class="nav">
+    <a href="{{ url_for('homepage') }}">Home</a>
+&nbsp|&nbsp
                   <a href="{{ url_for('products') }}">Product View</a>
-                  </li>
-                  <li>
+&nbsp|&nbsp
                   <a href="{{ url_for('categories') }}">Category View</a>
-                  </li>
-              </ul>
-          </section>
+</span><span class="user">Login</span>
+          </nav>
 
-      </nav>
       {% with messages = get_flashed_messages() %}
 	{% if messages %}
 	  <div class="alert">
@@ -64,16 +44,11 @@
 		</div>
 	{% endif %}
 	{% endwith %}
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer" align=right style="font-size:60%">
+{% block content %}{% endblock %}
+    <footer>
       {% block footer %}
       &copy; Copyright 2015 by Scott Harman SAM Limited &nbsp
       {% endblock %}
-    </div>
-    <script src="/static/js/vendor/jquery.js"></script>
-    <script src="/static/js/foundation.min.js"></script>
-    <script>
-      $(document).foundation();
-    </script>
+    </footer
   </body>
 </html>

@@ -41,20 +41,57 @@ table {
     display: table-cell;
     line-height: 0.925rem; }
 
-body {
-    background-image: -webkit-gradient(
-    	linear,
-    	right bottom,
-    	left top,
-    	color-stop(0, #787878),
-    	color-stop(1, #D4D4D4)
-    );
-    background-image: -o-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
-    background-image: -moz-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
-    background-image: -webkit-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
-    background-image: -ms-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
-    background-image: linear-gradient(to left top, #787878 0%, #D4D4D4 100%);
-    background-repeat: no-repeat;
-background-attachment: fixed;
-font-family: Hack, monospace;
-}
+
+    header {
+        background-color:#dedede;
+        color:#dedede;
+        text-align:center;
+        padding:5px;
+            	margin-bottom: 10px;
+    }
+    nav {
+    	background-color: #fff;
+    	border: 1px solid #dedede;
+    	border-radius: 4px;
+        padding: 5px;
+        padding-left: 15px;
+        padding-right: 15px;
+    	box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+    	color: #888;
+    	display: block;
+    	margin: auto;
+    	overflow: hidden;
+    	width: 60%;
+
+    }
+
+    footer {
+        clear: both;
+
+        text-size: 60%;
+        text-align: center;
+    }
+
+    section {
+      float: left;
+      --width: ;
+      display: block; /* for old browsers */
+    }
+
+    section.left {
+        float: left;
+        width: 30%;
+    }
+
+    section.right {
+        float: right;
+        width: 50%;
+    }
+
+    .nav {
+        float: left;
+    }
+
+    .user {
+        float: right;
+    }
