@@ -30,7 +30,7 @@
                   <a href="{{ url_for('products') }}">Product View</a>
 &nbsp|&nbsp
                   <a href="{{ url_for('categories') }}">Category View</a>
-</span><span class="user">Login</span>
+</span><span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>
           </nav>
 
       {% with messages = get_flashed_messages() %}
