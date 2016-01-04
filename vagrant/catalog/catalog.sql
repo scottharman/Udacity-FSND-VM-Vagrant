@@ -19,7 +19,8 @@ CREATE TABLE products (
     category_id INT REFERENCES category ON DELETE CASCADE,
     product_name TEXT NOT NULL DEFAULT '',
     product_description TEXT NOT NULL DEFAULT '',
-    price NUMERIC(12,2)
+    price NUMERIC(12,2),
+    user_id TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE users (
@@ -34,20 +35,20 @@ INSERT INTO category (category_name, category_description) VALUES
     ('Garden Equipment', 'Category for Garden Equipment'),
     ('Toys', 'Kids Toys');
 
-INSERT INTO products (category_id,product_name,product_description,price) VALUES
-    (1,'Dragon Toy','Kids Pool toy - Children over 10','15.15'),
-    (2,'Cricket Set','Kids Cricket set','25.25'),
-    (3,'Kylo Ren Mask','Voice Changing Kylo Ren Mask','39.35'),
-    (3,'Lightsaber','Light Side Lightsaber (Luke)','85.35'),
-    (3,'Lightsaber','Dark Side Lightsaber (Darth Vader)','75.35'),
-    (1,'Dive Sticks','Illuminated Dive Sticks (Lightsabers)','65.65'),
-    (1,'Dive Mask','Kids Dive Mask (Small)','35.35'),
-    (2,'Rocket Launcher','Launches Foam Rockets','32.31'),
-    (2,'Growing Eggs','Dinosaur Eggs for Garden','33.32'),
-    (2,'Boomerang','Soft Foam Boomerang','37.37'),
-    (3,'Adventure Kit','Kids exploration kit - telescope, compass, etc','55.35'),
-    (1,'Gup-C','Octonauts pool set','55.35'),
-    (1,'Flutter Board','Swimming helper','15.35'),
-    (1,'Squirters','Foam squirt guns','5.00'),
-    (2,'Squirt Guns','Waterpistols','3.35'),
-    (3,'Nerf Guns','For bigger kids','25.35');
+INSERT INTO products (category_id,product_name,product_description,price,user_id) VALUES
+    (1,'Dragon Toy','Kids Pool toy - Children over 10','15.15','scott@harman.tv'),
+    (2,'Cricket Set','Kids Cricket set','25.25','scott@harman.tv'),
+    (3,'Kylo Ren Mask','Voice Changing Kylo Ren Mask','39.35','scott@harman.tv'),
+    (3,'Lightsaber','Light Side Lightsaber (Luke)','85.35','scott@harman.tv'),
+    (3,'Lightsaber','Dark Side Lightsaber (Darth Vader)','75.35','scott@harman.tv'),
+    (1,'Dive Sticks','Illuminated Dive Sticks (Lightsabers)','65.65','scott@harman.tv'),
+    (1,'Dive Mask','Kids Dive Mask (Small)','35.35','scott@harman.tv'),
+    (2,'Rocket Launcher','Launches Foam Rockets','32.31','scott@harman.tv'),
+    (2,'Growing Eggs','Dinosaur Eggs for Garden','33.32','scott@harman.tv'),
+    (2,'Boomerang','Soft Foam Boomerang','37.37','scott@harman.tv'),
+    (3,'Adventure Kit','Kids exploration kit - telescope, compass, etc','55.35','scott@harman.tv'),
+    (1,'Gup-C','Octonauts pool set','55.35','scott@harman.tv'),
+    (1,'Flutter Board','Swimming helper','15.35','scott@harman.tv'),
+    (1,'Squirters','Foam squirt guns','5.00','bob@bob.com'),
+    (2,'Squirt Guns','Waterpistols','3.35','bob@bob.com'),
+    (3,'Nerf Guns','For bigger kids','25.35','bob@bob.com');

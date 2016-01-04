@@ -9,9 +9,11 @@
 {% endblock %}
 {% block content %}
 
-<h3>Products vt Category</h3>
-
-
+<h3>Products by Category</h3>
+<section class="left"><ul style="list-style-type:none">
+{% for category in categories %}
+<li><a href="{{ url_for('categories', id = category.category_id) }}">{{ category.category_name }}</a></li>{% endfor %}</ul></section>
+<section>
 <div style="clear:both;"></div>
 <table class="table" width=98% align=center>
     <tr><th>&nbsp</th>
@@ -28,9 +30,9 @@
     <td> {{ product.product_description }} </td>
     <td> {{ product.price }} </td>
 
-<td><a href="{{ url_for('editProduct', id = product.product_id) }}">Product View</a></td>
+<td><a href="{{ url_for('getProduct', id = product.product_id) }}">Product View</a></td>
     </tr>
 {% endfor %}
 </table>
-
+</section>
 {% endblock %}

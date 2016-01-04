@@ -58,32 +58,33 @@ def products():
 
 @app.route('/products/json')
 def json_products():
-    print products
-    return jsonify(Items=[i.serialize for i in products])
+    productItems = access.getProducts()
+    for product in productItems:
+        product.category_name = access.getCategory(product.category_id)
+    return jsonify(Items=[i.serialize for i in productItems])
 
 
-@app.route('/categories')
-def categories():
-    categories = access.getCategories()
-    return render_template('categories.html', categories=categories,
-        products=categories)
-
+@app.route('/categories/')
 @app.route('/categories/<int:id>')
-def showProductCategory(id):
+def categories(id=1):
+    categories = access.getCategories()
     productItems = access.getProductCategory(id)
     for product in productItems:
         product.category = access.getCategory(product.category_id)
-    return render_template('productbycategory.html', products=productItems)
+    return render_template('productbycategory.html', categories=categories, products=productItems)
 
 
 @app.route('/products/item/<int:id>/')
 def getProduct(id=1):
-    return "This is where an item lives %s", id
+    product = access.getProduct(id)
+    product.category = access.getCategory(product.category_id)
+    return render_template('product.html', product=product)
 
 
 @app.route('/products/edit/<int:id>/')
 def editProduct(id=1):
     return "This is where an item lives %s", id
+
 
 @app.route('/login')
 def showLogin():
@@ -176,6 +177,7 @@ def gconnect():
 
     # DISCONNECT - Revoke a current user's token and reset their login_session
 
+
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session['access_token']
@@ -204,4 +206,4 @@ def gdisconnect():
     else:
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
-        return response
+    	return response

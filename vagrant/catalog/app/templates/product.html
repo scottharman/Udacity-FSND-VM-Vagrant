@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+{% block title %}Products{% endblock %}
+{% block page %}Products{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+
+<h3>{{ product.product_name }} ({{ product.category }})</h3>
+
+
+ Name: {{ product.product_name }}</br>
+ Price: {{ product.price }}</br>
+ Description:</br>
+ {{ product.product_description }}</br>
+
+
+{% if session.email == product.user_id %}<a href="{{ url_for('editProduct', id = product.product_id) }}">Edit {{ product.product_name }}</a>&nbsp&nbsp<a href="{{ url_for('editProduct', id = product.product_id) }}">Delete {{ product.product_name }}</a>{% endif %}
+
+
+
+</section>
+
+
+
+{% endblock %}

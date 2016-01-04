@@ -28,14 +28,18 @@ class ProductItem(Base):
     product_description = Column(String(120))
     category_id = Column(Integer, ForeignKey('category.category_id'))
     price = Column(Numeric(12, 2))
+    user_id = Column(String(80), nullable=False)
 
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
-            'name': self.name,
-            'description': self.description,
-            'id': self.id,
+            'product_name': self.product_name,
+            'product_description': self.product_description,
+            'product_id': self.product_id,
+            #'category_name': category.category_name,
+            'category_id': self.category_id,
+            'price': self.price
         }
 
 engine = create_engine("postgresql+psycopg2://vagrant@/catalog")
