@@ -37,7 +37,6 @@ class ProductItem(Base):
             'product_name': self.product_name,
             'product_description': self.product_description,
             'product_id': self.product_id,
-            #'category_name': category.category_name,
             'category_id': self.category_id,
             'price': self.price
         }

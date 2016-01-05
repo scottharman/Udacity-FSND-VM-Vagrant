@@ -30,8 +30,12 @@
     <td> {{ product.product_description }} </td>
     <td> {{ product.price }} </td>
 
-<td><a href="{{ url_for('getProduct', id = product.product_id) }}">Product View</a></td>
-    </tr>
+<td><a href="{{ url_for('getProduct', id = product.product_id) }}">View</a></td>
+<td>
+{% if session.email == product.user_id %}
+<a href="{{ url_for('editProduct', id = product.product_id) }}">Edit/Delete</a>
+{% endif %}
+    </td></tr>
 {% endfor %}
 </table>
 </section>

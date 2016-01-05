@@ -9,20 +9,53 @@
 {% endblock %}
 {% block content %}
 
+<div class="row banner">
 <h3>{{ product.product_name }} ({{ product.category }})</h3>
+</div>
+{% if session.email == product.user_id %}
+<div class="row">
+    <form action="{{ url_for('editProduct', id = product.product_id)}}" method = "POST">
+        <div class="form-group">
+            <label for="product_name">Name</label>
+            <input type="text" class="form-control" name="product_name" value="{{ product.product_name }}">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" name="price" value="{{product.price}}" step="any">
+            <label for="category_id">Category</label>
+            <select name="category_id">
+                {% for category in categories %}
+                {% if product.category_id == category.category_id %}
+                <option value="{{category.category_id}}" selected>{{ category.category_name }}</option>
+                {% else %}
+                <option value="{{category.category_id}}">{{ category.category_name }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <label for="product_description">Description</label>
+            <textarea name="product_description" class="form-control" rows=5 cols=40>{{product.product_description}}</textarea>
+        </div>
+            <input type="submit" value="Update">
+            <input type="submit" value="Delete" formaction="{{ url_for('deleteProduct', id = product.product_id) }}">
+        </form>
+    </div>
 
+</div>
+{% else %}
+<div class="row">
+    <form action="{{ url_for('editProduct', id = product.product_id)}}" method = "POST">
+        <div class="form-group">
+            <label for="product_name">Name</label>
+            <input type="text" class="form-control" name="product_name" value="{{ product.product_name }}">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" name="price" value="{{product.price}}" step="any">
+            <label for="product_description">Description</label>
+            <textarea name="product_description" class="form-control" rows=5 cols=40>{{product.product_description}}</textarea>
+        </div>
+            <input type="cancel" value="Not Authenticated">
 
- Name: {{ product.product_name }}</br>
- Price: {{ product.price }}</br>
- Description:</br>
- {{ product.product_description }}</br>
+        </form>
+    </div>
+{% endif %}
 
-
-{% if session.email == product.user_id %}<a href="{{ url_for('editProduct', id = product.product_id) }}">Edit {{ product.product_name }}</a>&nbsp&nbsp<a href="{{ url_for('editProduct', id = product.product_id) }}">Delete {{ product.product_name }}</a>{% endif %}
-
-
-
-</section>
 
 
 

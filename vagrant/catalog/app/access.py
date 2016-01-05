@@ -7,7 +7,7 @@ session = DBsession()
 
 
 def getProductCountCategory(cat_id, count):
-    products = session.query(ProductItem).filter(ProductItem.category_id == cat_id).limit(count)  # noqa
+    products = session.query(ProductItem).filter(ProductItem.category_id == cat_id).order_by(ProductItem.price.desc()).limit(count)  # noqa
     return products
 
 
@@ -45,15 +45,10 @@ def updateProduct(id):
 
 
 def getCategory(cat_id):
-    print id
-
-    category = session.query(Category).filter(Category.category_id==cat_id).first()
+    category = session.query(Category).filter(Category.category_id == cat_id).first()  # NOQA
     return category.category_name
+
 
 def getCategories():
     categories = session.query(Category).all()
     return categories
-
-def addUser():
-    """Add a new user"""
-    return

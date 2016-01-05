@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+{% block title %}Products{% endblock %}
+{% block page %}Products{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+
+<div class="row banner">
+<h3>Add New Product</h3>
+</div>
+<div class="row">
+    <form action="{{ url_for('addProduct')}}" method = "POST">
+        <div class="form-group">
+            <label for="product_name">Name</label>
+            <input type="text" class="form-control" name="product_name" value="Name Here">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" name="price" value="0.00" step="any">
+            <label for="category_id">Category</label>
+            <select name="category_id">
+                {% for category in categories %}
+                <option value="{{category.category_id}}">{{ category.category_name }}</option>
+                {% endfor %}
+            </select>
+            <label for="product_description">Description</label>
+            <textarea name="product_description" class="form-control" rows=5 cols=40></textarea>
+        </div>
+            <input type="submit" value="Add New">
+
+        </form>
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}

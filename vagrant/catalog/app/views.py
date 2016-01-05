@@ -1,4 +1,4 @@
-from app import app, access
+from app import app, access, models
 from flask import Flask, render_template, request, redirect, jsonify, url_for
 from flask import flash
 
@@ -17,17 +17,17 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Udacity Catalog Project"
 
+
 @app.route('/')
 @app.route('/home')
 def homepage():
     """Returns the last 5 products for each category"""
-    """Should have two panels - LHS lists categories, and initial RHS view lists most recent products across all categories plus price and category
-    category and/or product are clickable, to return either the category page or the product page.
+    """Should have two panels - LHS lists categories, and initial RHS view lists
+    most recent products across all categories plus price and category
+    category and/or product are clickable, to return either the category page or
+    the product page.
     Users can edit, create, or delete only the items that they created
     """
-    #productItems = access.getProducts()
-    #for product in productItems:
-    #    product.category = access.getCategory(product.category_id)
     productItems = []
     categories = access.getCategories()
     for category in categories:
@@ -35,25 +35,24 @@ def homepage():
     for product in productItems:
         product.category_name = access.getCategory(product.category_id)
     return render_template('producthome.html', categories=categories,
-        products=productItems)
+                           products=productItems)
 
 
-@app.route('/products')
+@app.route('/products/')
 def products():
     """Returns the last 5 products for each category"""
-    """Should have two panels - LHS lists categories, and initial RHS view lists most recent products across all categories plus price and category
-    category and/or product are clickable, to return either the category page or the product page.
+    """Should have two panels - LHS lists categories, and initial RHS view lists
+     most recent products across all categories plus price and category
+    category and/or product are clickable, to return either the category page or
+     the product page.
     Users can edit, create, or delete only the items that they created
     """
-    #productItems = access.getProducts()
-    #for product in productItems:
-    #    product.category = access.getCategory(product.category_id)
     productItems = []
     categories = access.getCategories()
     for category in categories:
         productItems += access.getProductCountCategory(category.category_id, 5)
     return render_template('products.html', categories=categories,
-        products=productItems)
+                           products=productItems)
 
 
 @app.route('/products/json')
@@ -71,19 +70,68 @@ def categories(id=1):
     productItems = access.getProductCategory(id)
     for product in productItems:
         product.category = access.getCategory(product.category_id)
-    return render_template('productbycategory.html', categories=categories, products=productItems)
+    return render_template('productbycategory.html', categories=categories,
+                           products=productItems)
 
 
-@app.route('/products/item/<int:id>/')
+@app.route('/products/<int:id>/')
 def getProduct(id=1):
     product = access.getProduct(id)
     product.category = access.getCategory(product.category_id)
     return render_template('product.html', product=product)
 
 
-@app.route('/products/edit/<int:id>/')
+@app.route('/products/<int:id>/edit/', methods=['GET', 'POST'])
 def editProduct(id=1):
-    return "This is where an item lives %s", id
+    categories = access.getCategories()
+    product = access.getProduct(id)
+    product.category = access.getCategory(product.category_id)
+    if request.method == 'POST':
+        product.product_name = request.form['product_name']
+        product.price = request.form['price']
+        product.product_description = request.form['product_description']
+        product.category_id = request.form['category_id']
+        flash('Product Edited %s' % product.product_name)
+        access.session.commit()
+        return redirect(url_for('products'))
+    else:
+        return render_template('editProduct.html', product=product,
+                               categories=categories)
+
+
+@app.route('/products/<int:id>/delete/', methods=['GET', 'POST'])
+def deleteProduct(id=1):
+    product = access.getProduct(id)
+    product.category = access.getCategory(product.category_id)
+    if login_session['email'] == product.user_id:
+        if request.method == 'POST':
+            access.session.delete(product)
+            access.session.commit()
+            flash('Product Deleted %s' % product.product_name)
+            return redirect(url_for('products'))
+        else:
+            return render_template('deleteProduct.html', product=product)
+    else:
+        flash('No permission to delete %s' % login_session['username'])
+        return redirect(url_for('products'))
+
+
+@app.route('/products/add/', methods=['GET', 'POST'])
+def addProduct():
+    categories = access.getCategories()
+    if request.method == 'POST':
+        product = models.ProductItem(
+            product_name=request.form['product_name'],
+            price=request.form['price'],
+            product_description=request.form['product_description'],
+            category_id=request.form['category_id'],
+            user_id=login_session['email'])
+        flash('Product Added %s' % product.product_name)
+        access.session.add(product)
+        access.session.commit()
+        return redirect(url_for('products'))
+    else:
+        return render_template('addProduct.html', categories=categories)
 
 
 @app.route('/login')
@@ -145,7 +193,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'), 200)
+        response = make_response(json.dumps(
+            'Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -170,7 +219,7 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # NOQA
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -189,7 +238,7 @@ def gdisconnect():
         response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']  # NOQA
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print 'result is '
@@ -204,6 +253,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps(
+            'Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
-    	return response
+        return response

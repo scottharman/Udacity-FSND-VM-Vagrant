@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
 <html class="no-js" lang="en" >
-  <head>
+<head>
     {% block head %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- If you are using the CSS version, only link these 2 files, you may add app.css to use for your overrides if you like -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.017/css/hack.min.css">
-      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
 
@@ -19,36 +19,38 @@
 
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
-  </head>
-  <body>
-      <header>
-                  <h1>{% block page %}{% endblock %}</h1>
+</head>
+<body>
+    <header>
+        <h1>{% block page %}{% endblock %}</h1>
     </header>
-<nav><span class="nav">
-    <a href="{{ url_for('homepage') }}">Home</a>
-&nbsp|&nbsp
-                  <a href="{{ url_for('products') }}">Product View</a>
-&nbsp|&nbsp
-                  <a href="{{ url_for('categories') }}">Category View</a>
-</span>{% if session['username'] == ''  %} </span><span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% endif %}
-          </nav>
+    <nav><span class="nav">
+        <a href="{{ url_for('homepage') }}">Home</a>
+        &nbsp|&nbsp
+        <a href="{{ url_for('products') }}">Product View</a>
+        &nbsp|&nbsp
+        <a href="{{ url_for('categories') }}">Category View</a>
+        &nbsp|&nbsp
+        <a href="{{ url_for('addProduct') }}">Add Product</a>
+    </span>{% if session['username'] == ''  %} </span><span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% endif %}
+</nav>
 
-      {% with messages = get_flashed_messages() %}
-	{% if messages %}
-	  <div class="alert">
-		    <ul class="flashes">
-		    {% for message in messages %}
-		      <li>{{ message }}</li>
-		    {% endfor %}
-		    </ul>
-		</div>
-	{% endif %}
-	{% endwith %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div data-alert class="alert-box warning round" style="margin: 0 auto; width:80%;">
+
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+
+</div>
+{% endif %}
+{% endwith %}
 {% block content %}{% endblock %}
-    <footer>
-      {% block footer %}
-      &copy; Copyright 2015 by Scott Harman SAM Limited &nbsp
-      {% endblock %}
+<footer>
+    {% block footer %}
+    &copy; Copyright 2015 by Scott Harman SAM Limited &nbsp
+    {% endblock %}
     </footer
-  </body>
+</body>
 </html>
