@@ -64,27 +64,30 @@ def json_products():
 
 
 @app.route('/categories/')
-@app.route('/categories/<int:id>')
-def categories(id=1):
+@app.route('/categories/<name>')
+def categories(name=''):
     categories = access.getCategories()
-    productItems = access.getProductCategory(id)
+    if name != '':
+        productItems = access.getProductCategoryByName(name)
+    else:
+        productItems = access.getProducts()
     for product in productItems:
         product.category = access.getCategory(product.category_id)
     return render_template('productbycategory.html', categories=categories,
                            products=productItems)
 
 
-@app.route('/products/<int:id>/')
-def getProduct(id=1):
-    product = access.getProduct(id)
+@app.route('/products/<name>/')
+def getProduct(name):
+    product = access.getProductByName(name)
     product.category = access.getCategory(product.category_id)
     return render_template('product.html', product=product)
 
 
-@app.route('/products/<int:id>/edit/', methods=['GET', 'POST'])
-def editProduct(id=1):
+@app.route('/products/<name>/edit/', methods=['GET', 'POST'])
+def editProduct(name):
     categories = access.getCategories()
-    product = access.getProduct(id)
+    product = access.getProductByName(name)
     product.category = access.getCategory(product.category_id)
     if request.method == 'POST':
         product.product_name = request.form['product_name']
@@ -99,9 +102,9 @@ def editProduct(id=1):
                                categories=categories)
 
 
-@app.route('/products/<int:id>/delete/', methods=['GET', 'POST'])
-def deleteProduct(id=1):
-    product = access.getProduct(id)
+@app.route('/products/<name>/delete/', methods=['GET', 'POST'])
+def deleteProduct(name):
+    product = access.getProductbyName(id)
     product.category = access.getCategory(product.category_id)
     if login_session['email'] == product.user_id:
         if request.method == 'POST':

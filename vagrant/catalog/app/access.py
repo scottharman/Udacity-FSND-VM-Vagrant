@@ -13,7 +13,8 @@ def getProductCountCategory(cat_id, count):
 
 def getProducts():
     """Returns the products as objects"""
-    products = session.query(ProductItem).all()
+    products = session.query(ProductItem).\
+    order_by(ProductItem.product_name.asc()).all()
     return products
 
 
@@ -23,25 +24,22 @@ def getProductCategory(cat_id):
     return products
 
 
-def getProduct(id):
-    """Returns the product for the given ID"""
-    product = session.query(ProductItem).filter(ProductItem.product_id == id).first()  # noqa
+def getProductCategoryByName(name):
+    """Returns all the products in the category by name"""
+    products = session.query(ProductItem).join(Category).filter(Category.category_name == name).all()  # noqa
+    return products
+
+
+def getProductByName(name):
+    """Returns the product for the given product name"""
+    product = session.query(ProductItem).filter(ProductItem.product_name == name).first()  # noqa
     return product
 
 
-def addProduct():
-    """Add a product to the database"""
-    return
-
-
-def deleteProduct(id):
-    """Delete a product from the database"""
-    return
-
-
-def updateProduct(id):
-    """Change a product description, price, or title in the database"""
-    return
+def getProductByID(id):
+    """Returns the product for the given product name"""
+    product = session.query(ProductItem).filter(ProductItem.product_id == id).first()  # noqa
+    return product
 
 
 def getCategory(cat_id):

@@ -14,7 +14,7 @@
 </div>
 {% if session.email == product.user_id %}
 <div class="row">
-    <form action="{{ url_for('editProduct', id = product.product_id)}}" method = "POST">
+    <form action="{{ url_for('editProduct', name = product.product_name)}}" method = "POST">
         <div class="form-group">
             <label for="product_name">Name</label>
             <input type="text" class="form-control" name="product_name" value="{{ product.product_name }}">
@@ -34,7 +34,7 @@
             <textarea name="product_description" class="form-control" rows=5 cols=40>{{product.product_description}}</textarea>
         </div>
             <input type="submit" value="Update">
-            <input type="submit" value="Delete" formaction="{{ url_for('deleteProduct', id = product.product_id) }}">
+            <input type="submit" value="Delete" formaction="{{ url_for('deleteProduct', name = product.product_name) }}">
         </form>
     </div>
 

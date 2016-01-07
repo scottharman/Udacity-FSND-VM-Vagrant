@@ -32,8 +32,9 @@
         <a href="{{ url_for('categories') }}">Category View</a>
         &nbsp|&nbsp
         <a href="{{ url_for('addProduct') }}">Add Product</a>
-    </span>{% if session['username'] == ''  %} </span><span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% endif %}
+    </span>{% if session['username'] == ''  %} <span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% endif %}
 </nav>
+{{ session }}
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}

@@ -34,7 +34,7 @@
     <td> {{ product.product_description }} </td>
     <td> {{ product.price }} </td>
 
-<td><a href="{{ url_for('getProduct', id = product.product_id) }}">Product View</a></td>
+<td><a href="{{ url_for('getProduct', name = product.product_name) }}">Product View</a></td>
     </tr>
 {% endfor %}
 </table>

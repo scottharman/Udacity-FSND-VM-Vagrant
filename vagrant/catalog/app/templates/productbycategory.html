@@ -12,7 +12,7 @@
 <h3>Products by Category</h3>
 <section class="left"><ul style="list-style-type:none">
 {% for category in categories %}
-<li><a href="{{ url_for('categories', id = category.category_id) }}">{{ category.category_name }}</a></li>{% endfor %}</ul></section>
+<li><a href="{{ url_for('categories', name = category.category_name) }}">{{ category.category_name }}</a></li>{% endfor %}</ul></section>
 <section>
 <div style="clear:both;"></div>
 <table class="table" width=98% align=center>
@@ -21,6 +21,7 @@
         <th>Product Name</th>
         <th>Description</th>
         <th>Price</th>
+        <th>Category</th>
         <th>&nbsp</th>
     </tr>
 {% for product in products %}
@@ -29,11 +30,12 @@
     <td> {{ product.product_name }} </td>
     <td> {{ product.product_description }} </td>
     <td> {{ product.price }} </td>
+    <td> <a href="{{ url_for('categories', name = product.category) }}">{{ product.category }}</a> </td>
 
-<td><a href="{{ url_for('getProduct', id = product.product_id) }}">View</a></td>
+<td><a href="{{ url_for('getProduct', name = product.product_name) }}">View</a></td>
 <td>
 {% if session.email == product.user_id %}
-<a href="{{ url_for('editProduct', id = product.product_id) }}">Edit/Delete</a>
+<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit/Delete</a>
 {% endif %}
     </td></tr>
 {% endfor %}
