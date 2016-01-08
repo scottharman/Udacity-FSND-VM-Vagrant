@@ -8,9 +8,11 @@
   </style>
 {% endblock %}
 {% block content %}
-
+</br>
+<section class=left>
 <h3>{{ product.product_name }} ({{ product.category }})</h3>
-
+</section>
+<section>
 
  Name: {{ product.product_name }}</br>
  Price: {{ product.price }}</br>
@@ -18,7 +20,7 @@
  {{ product.product_description }}</br>
 
 
-{% if session.email == product.user_id %}<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit {{ product.product_name }}</a>{% endif %}
+{% if session.email == product.user_id %}<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit/Delete {{ product.product_name }}</a>{% endif %}
 
 
 

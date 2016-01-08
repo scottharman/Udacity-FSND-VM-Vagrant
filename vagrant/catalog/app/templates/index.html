@@ -4,18 +4,14 @@
 <head>
     {% block head %}
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- If you are using the CSS version, only link these 2 files, you may add app.css to use for your overrides if you like -->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.017/css/hack.min.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
 
     <!-- If you are using the gem version, you need this only -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/static/js/vendor/modernizr.js"></script>
 
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
@@ -30,11 +26,12 @@
         <a href="{{ url_for('products') }}">Product View</a>
         &nbsp|&nbsp
         <a href="{{ url_for('categories') }}">Category View</a>
+        {% if session['email'] != ''  %}
         &nbsp|&nbsp
-        <a href="{{ url_for('addProduct') }}">Add Product</a>
-    </span>{% if session['username'] == ''  %} <span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% endif %}
+        <a href="{{ url_for('addProduct') }}">Add Product</a>{% endif %}
+    </span>{% if session['email'] == ''  %} <span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% endif %}
 </nav>
-{{ session }}
+
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}

@@ -1,3 +1,7 @@
+body {
+    padding: 10px;
+}
+
 table {
   background: #FFFFFF;
   margin-bottom: 1.25rem;
@@ -42,56 +46,81 @@ table {
     line-height: 0.925rem; }
 
 
-    header {
-        background-color:#dedede;
-        color:#dedede;
-        text-align:center;
-        padding:5px;
-            	margin-bottom: 10px;
-    }
-    nav {
-    	background-color: #fff;
-    	border: 1px solid #dedede;
-    	border-radius: 4px;
-        padding: 5px;
-        padding-left: 15px;
-        padding-right: 15px;
-    	box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
-    	color: #888;
-    	display: block;
-    	margin: auto;
-    	overflow: hidden;
-    	width: 60%;
+header {
+    background-color:#dedede;
+    #color:#dedede;
+    text-align:center;
+    margin: 10px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    padding: 5px;
 
-    }
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+}
+nav {
+	background-color: #fff;
+	border: 1px solid #dedede;
+	border-radius: 4px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+	box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+	color: #888;
+	display: block;
+	margin: auto;
+	overflow: hidden;
+	width: 60%;
 
-    footer {
-        clear: both;
+}
 
-        text-size: 60%;
-        text-align: center;
-    }
+footer {
+    clear: both;
+    font-size: 0.6em;
+    text-align: center;
+    background-color: #fff;
+	border: 1px solid #dedede;
+	border-radius: 4px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+	box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+	color: #888;
+    bottom: 0;
+    position: fixed;
+}
 
-    section {
-      float: left;
-      --width: ;
-      display: block; /* for old browsers */
-    }
+section {
+  float: left;
+  --width: ;
+  display: block; /* for old browsers */
+  #background-color: #fff;
+  #border: 1px solid #dedede;
+  border-radius: 4px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+  #box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+  color: #888;
+  margin: auto;
+  overflow: hidden;
+  width: 60%;
 
-    section.left {
-        float: left;
-        width: 30%;
-    }
+}
 
-    section.right {
-        float: right;
-        width: 50%;
-    }
+section.left {
+    float: left;
+    width: 30%;
+}
 
-    .nav {
-        float: left;
-    }
+section.right {
+    float: right;
+    width: 50%;
+}
 
-    .user {
-        float: right;
-    }
+.nav {
+    float: left;
+}
+
+.user {
+    float: right;
+}
