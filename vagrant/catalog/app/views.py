@@ -38,7 +38,7 @@ def homepage():
                            products=productItems)
 
 
-@app.route('/products/')
+@app.route('/products')
 def products():
     """Returns the last 5 products for each category"""
     """Should have two panels - LHS lists categories, and initial RHS view lists
@@ -63,7 +63,7 @@ def json_products():
     return jsonify(Items=[i.serialize for i in productItems])
 
 
-@app.route('/categories/')
+@app.route('/categories')
 @app.route('/categories/<name>')
 def categories(name=''):
     categories = access.getCategories()
@@ -119,7 +119,7 @@ def deleteProduct(name):
         return redirect(url_for('products'))
 
 
-@app.route('/products/add/', methods=['GET', 'POST'])
+@app.route('/products/add', methods=['GET', 'POST'])
 def addProduct():
     categories = access.getCategories()
     if request.method == 'POST':
@@ -196,6 +196,7 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
+        login_session['logged_in'] = 'true'
         response = make_response(json.dumps(
             'Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
@@ -215,7 +216,7 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-
+    login_session['logged_in'] = 'true'
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -252,9 +253,9 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        del login_session['logged_in']
+        flash('Successfully Disconnected')
+        return redirect(url_for('products'))
     else:
         response = make_response(json.dumps(
             'Failed to revoke token for given user.', 400))

@@ -14,7 +14,7 @@ def getProductCountCategory(cat_id, count):
 def getProducts():
     """Returns the products as objects"""
     products = session.query(ProductItem).\
-    order_by(ProductItem.product_name.asc()).all()
+        order_by(ProductItem.product_name.asc()).all()
     return products
 
 

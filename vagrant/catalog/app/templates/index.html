@@ -4,14 +4,19 @@
 <head>
     {% block head %}
     <meta charset="utf-8" />
-    <!-- If you are using the CSS version, only link these 2 files, you may add app.css to use for your overrides if you like -->
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
-
-    <!-- If you are using the gem version, you need this only -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+
+
+
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+    $('#message-box').delay(500).fadeOut('slow')
+});
+    </script>
 
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
@@ -26,24 +31,27 @@
         <a href="{{ url_for('products') }}">Product View</a>
         &nbsp|&nbsp
         <a href="{{ url_for('categories') }}">Category View</a>
-        {% if session['email'] != ''  %}
+        {% if session.logged_in %}
         &nbsp|&nbsp
         <a href="{{ url_for('addProduct') }}">Add Product</a>{% endif %}
-    </span>{% if session['email'] == ''  %} <span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% endif %}
+    </span>{% if not session.logged_in %} <span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% else %}
+    <span class="user"><a href="{{ url_for('gdisconnect') }}">Logout</a></span>{% endif %}
 </nav>
+
 
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
-<div data-alert class="alert-box warning round" style="margin: 0 auto; width:80%;">
+<div class="message-box">
 
     {% for message in messages %}
     {{ message }}
     {% endfor %}
-
 </div>
+
 {% endif %}
 {% endwith %}
+
 {% block content %}{% endblock %}
 <footer>
     {% block footer %}

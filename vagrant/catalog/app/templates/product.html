@@ -1,6 +1,6 @@
 {% extends "index.html" %}
-{% block title %}Products{% endblock %}
-{% block page %}Products{% endblock %}
+{% block title %}{{product.product_name}}{% endblock %}
+{% block page %}Product - {{product.product_name}}{% endblock %}
 {% block head %}
   {{ super() }}
   <style type="text/css">
@@ -9,22 +9,23 @@
 {% endblock %}
 {% block content %}
 </br>
-<section class=left>
+<div class="box">
+<div class="columnleft">
 <h3>{{ product.product_name }} ({{ product.category }})</h3>
-</section>
-<section>
-
- Name: {{ product.product_name }}</br>
- Price: {{ product.price }}</br>
- Description:</br>
- {{ product.product_description }}</br>
-
+</div>
+<div class="columnright">
+<dl>
+ <dt>Name: {{ product.product_name }}</dt>
+ <dd>Price: {{ product.price }}</dd>
+ <dd>Description:</br>
+ {{ product.product_description }}</dd>
+</br>
 
 {% if session.email == product.user_id %}<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit/Delete {{ product.product_name }}</a>{% endif %}
 
 
-
-</section>
+</div>
+</div>
 
 
 

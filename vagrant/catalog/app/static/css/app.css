@@ -59,19 +59,36 @@ header {
     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
 }
 nav {
-	background-color: #fff;
+	background-color: #999;
 	border: 1px solid #dedede;
 	border-radius: 4px;
     padding: 5px;
     padding-left: 15px;
     padding-right: 15px;
 	box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
-	color: #888;
+	color: #444;
 	display: block;
 	margin: auto;
 	overflow: hidden;
 	width: 60%;
 
+}
+
+a {
+    font-style: oblique;
+    font-weight: bold;
+    color: #444;
+    line-height: 1.5em;
+}
+
+.message-box {
+    border: 1px solid #008cba;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+    background-color: #008cba;
+    width: 80%;
+    margin: 20px auto;
 }
 
 footer {
@@ -90,23 +107,8 @@ footer {
     position: fixed;
 }
 
-section {
-  float: left;
-  --width: ;
-  display: block; /* for old browsers */
-  #background-color: #fff;
-  #border: 1px solid #dedede;
-  border-radius: 4px;
-    padding: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
-  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
-  color: #888;
-  margin: auto;
-  overflow: hidden;
-  width: 60%;
 
-}
+
 
 .box {
     width:90%;
@@ -117,58 +119,66 @@ section {
      /* Safari, Opera, and Chrome */
     display:-webkit-box;
     -webkit-box-orient:horizontal;
-    /* W3C */
-    display:box;
+
     box-orient:horizontal;
+    margin: 20px auto;
 
 
 }
 
-.box .column1 {
+.box .columnleft {
+    width:300px;
+    position:relative;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+     padding: 5px;
+     padding-left: 15px;
+     padding-right: 15px;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+    margin-right: 10px;
+}
+
+.box .columnright {
     -moz-box-flex:1.0; /* Firefox */
     -webkit-box-flex:1.0; /* Safari and Chrome */
     -ms-flex:1.0; /* Internet Explorer 10 */
     box-flex:1.0;
-
-    #background-color: #fff;
     border: 1px solid #dedede;
     border-radius: 4px;
       padding: 5px;
       padding-left: 15px;
       padding-right: 15px;
     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
-        margin-right: 10px;
-}
-
-.box .column2 {
-    -moz-box-flex:1.0; /* Firefox */
-    -webkit-box-flex:1.0; /* Safari and Chrome */
-    -ms-flex:1.0; /* Internet Explorer 10 */
-    box-flex:1.0;
-    #background-color: #fff;
-    border: 1px solid #dedede;
-    border-radius: 4px;
-      padding: 5px;
-      padding-left: 15px;
-      padding-right: 15px;
-    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
 
 }
 
-section.left {
-    float: left;
-    width: 30%;
+.box dt {
+    color: #c50000;
+        line-height: 1.4em;
 }
 
-section.right {
-    float: right;
-    width: 50%;
+
+
+.box dd {
+    color: #d80000;
+        line-height: 1.4em;
 }
 
-a {
-    font-style: oblique;
+.box .columnleft a {
+    font-style: normal;
     font-weight: bold;
-    color: #7328d7;
+    color: #999;
+    line-height: 1.4em;
+
+}
+
+
+
+
+.box .columnright a {
+    color: #c34500;
+        line-height: 1.1em;
+        font-size: 0.9em;
 }
 
 .nav {
@@ -177,4 +187,30 @@ a {
 
 .user {
     float: right;
+}
+
+form {
+    display: block;
+    margin-top: 0em;
+    margin: 20px auto;
+    width: 60%;
+    padding: 5px;
+}
+
+
+
+.form-control {
+    display: block;
+
+    line-height: 1.4em;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: inherit;
+}
+label.control-label.col-sm-2 {
+    padding: 10px;
+    line-height: 1.6em;
 }
