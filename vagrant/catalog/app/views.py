@@ -55,7 +55,7 @@ def products():
                            products=productItems)
 
 
-@app.route('/products/json')
+@app.route('/catalog.json')
 def json_products():
     productItems = access.getProducts()
     for product in productItems:

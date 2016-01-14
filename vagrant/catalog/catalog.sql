@@ -20,15 +20,19 @@ CREATE TABLE products (
     product_name TEXT NOT NULL DEFAULT '',
     product_description TEXT NOT NULL DEFAULT '',
     price NUMERIC(12,2),
-    user_id TEXT NOT NULL DEFAULT ''
+    user_id TEXT DEFAULT NULL,
+    created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
+/* Not currently implemented. Saving for fully local authentication */
+/*
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username TEXT,
     password TEXT,
     registered TIMESTAMP
 );
+*/
 
 INSERT INTO category (category_name, category_description) VALUES
     ('Pool Equipment', 'Category for Pool Equipment'),
@@ -52,3 +56,5 @@ INSERT INTO products (category_id,product_name,product_description,price,user_id
     (1,'Squirters','Foam squirt guns','5.00','bob@bob.com'),
     (2,'Squirt Guns','Waterpistols','3.35','bob@bob.com'),
     (3,'Nerf Guns','For bigger kids','25.35','bob@bob.com');
+
+INSERT INTO products (category_id, product_name, product_description, price) VALUES (1,'Dummy', 'Dummy with no owner','25.15'),(2,'Dummy','Dummy with no owners','15.15'),(3,'Dummy','Another dummy','1.10');
