@@ -7,7 +7,14 @@ session = DBsession()
 
 
 def getProductCountCategory(cat_id, count):
+    """Return count of product for specific category"""
     products = session.query(ProductItem).filter(ProductItem.category_id == cat_id).order_by(ProductItem.price.desc()).limit(count)  # noqa
+    return products
+
+
+def getProductCount(count):
+    """Return specific number of products"""
+    products = session.query(ProductItem).order_by(ProductItem.created.desc()).limit(count)  # noqa
     return products
 
 
@@ -47,6 +54,28 @@ def getCategory(cat_id):
     return category.category_name
 
 
+def getCategoryByName(name):
+    category = session.query(
+            Category).filter(Category.category_name == name).all()
+    return category
+
+
 def getCategories():
+    """Return all the categories as objects"""
     categories = session.query(Category).all()
     return categories
+
+
+def countItemsByCategory(name):
+    """Return a count of the number of items in the category"""
+    return session.query(ProductItem).join(Category).filter(Category.category_name == name).count()  # noqa
+
+
+def checkLogin(name, password):
+    user = session.query(User).filter(User.username == name).first()
+    print models.User.check_password(user, password)
+    return 'true'
+
+
+def userExists(name):
+    return session.query(User).filter(User.username == name).first()  # noqa

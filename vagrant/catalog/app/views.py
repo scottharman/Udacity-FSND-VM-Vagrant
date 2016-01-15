@@ -1,6 +1,8 @@
 from app import app, access, models
 from flask import Flask, render_template, request, redirect, jsonify, url_for
-from flask import flash
+from flask import flash, make_response
+from werkzeug.contrib.atom import AtomFeed
+from werkzeug.security import generate_password_hash
 
 from flask import session as login_session
 import random
@@ -10,8 +12,9 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 import json
-from flask import make_response
 import requests
+from urlparse import urljoin
+from datetime import datetime
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -19,8 +22,8 @@ APPLICATION_NAME = "Udacity Catalog Project"
 
 
 @app.route('/')
-@app.route('/home')
-def homepage():
+@app.route('/products')
+def products():
     """Returns the last 5 products for each category"""
     """Should have two panels - LHS lists categories, and initial RHS view lists
     most recent products across all categories plus price and category
@@ -31,15 +34,19 @@ def homepage():
     productItems = []
     categories = access.getCategories()
     for category in categories:
+        category.count = access.countItemsByCategory(category.category_name)
         productItems += access.getProductCountCategory(category.category_id, 5)
     for product in productItems:
         product.category_name = access.getCategory(product.category_id)
-    return render_template('producthome.html', categories=categories,
+    return render_template('products.html', categories=categories,
                            products=productItems)
 
 
-@app.route('/products')
-def products():
+# Switch product global view to category, then add counters per category
+@app.route('/catalog')
+@app.route('/catalog/')
+@app.route('/catalog/<name>/items')
+def categories(name=''):
     """Returns the last 5 products for each category"""
     """Should have two panels - LHS lists categories, and initial RHS view lists
      most recent products across all categories plus price and category
@@ -49,42 +56,50 @@ def products():
     """
     productItems = []
     categories = access.getCategories()
+    if name != '':
+        categories = access.getCategoryByName(name)
+        productItems = access.getProductCategoryByName(name)
+    else:
+        for category in categories:
+            productItems += access.getProductCategory(category.category_id)
+    for product in productItems:
+        product.category = access.getCategory(product.category_id)
     for category in categories:
-        productItems += access.getProductCountCategory(category.category_id, 5)
+        category.count = access.countItemsByCategory(category.category_name)
     return render_template('products.html', categories=categories,
                            products=productItems)
 
 
 @app.route('/catalog.json')
 def json_products():
-    productItems = access.getProducts()
-    for product in productItems:
-        product.category_name = access.getCategory(product.category_id)
-    return jsonify(Items=[i.serialize for i in productItems])
-
-
-@app.route('/categories')
-@app.route('/categories/<name>')
-def categories(name=''):
     categories = access.getCategories()
-    if name != '':
-        productItems = access.getProductCategoryByName(name)
-    else:
-        productItems = access.getProducts()
-    for product in productItems:
-        product.category = access.getCategory(product.category_id)
-    return render_template('productbycategory.html', categories=categories,
-                           products=productItems)
+    for category in categories:
+        category.Items = access.getProductCategory(category.category_id)
+        for product in category.Items:
+            product.category_name = access.getCategory(product.category_id)
+    return jsonify(Category=[i.serialize for i in categories])
 
 
-@app.route('/products/<name>/')
+@app.route('/catalog/<name>/items/json')
+def category_json(name):
+    productItems = []
+    categories = access.getCategories()
+    categories = access.getCategoryByName(name)
+    for category in categories:
+        category.Items = access.getProductCategory(category.category_id)
+        for product in category.Items:
+            product.category_name = access.getCategory(product.category_id)
+    return jsonify(Category=[i.serialize for i in categories])
+
+
+@app.route('/catalog/<name>/')
 def getProduct(name):
     product = access.getProductByName(name)
     product.category = access.getCategory(product.category_id)
     return render_template('product.html', product=product)
 
 
-@app.route('/products/<name>/edit/', methods=['GET', 'POST'])
+@app.route('/catalog/<name>/edit/', methods=['GET', 'POST'])
 def editProduct(name):
     categories = access.getCategories()
     product = access.getProductByName(name)
@@ -94,16 +109,18 @@ def editProduct(name):
         product.price = request.form['price']
         product.product_description = request.form['product_description']
         product.category_id = request.form['category_id']
+        product.updated = datetime.utcnow()
         flash('Product Edited %s' % product.product_name)
         access.session.commit()
-        return redirect(url_for('products'))
+        return redirect(request.referrer)
     else:
         return render_template('editProduct.html', product=product,
                                categories=categories)
 
 
-@app.route('/products/<name>/delete/', methods=['GET', 'POST'])
+@app.route('/catalog/<name>/delete/', methods=['GET', 'POST'])
 def deleteProduct(name):
+    """Delete defined product if you are the user who owns it"""
     product = access.getProductbyName(id)
     product.category = access.getCategory(product.category_id)
     if login_session['email'] == product.user_id:
@@ -111,7 +128,7 @@ def deleteProduct(name):
             access.session.delete(product)
             access.session.commit()
             flash('Product Deleted %s' % product.product_name)
-            return redirect(url_for('products'))
+            return redirect(url_for('categories'))
         else:
             return render_template('deleteProduct.html', product=product)
     else:
@@ -119,8 +136,17 @@ def deleteProduct(name):
         return redirect(url_for('products'))
 
 
-@app.route('/products/add', methods=['GET', 'POST'])
+@app.route('/catalog/<name>/json')
+def product_json(name):
+    """Display JSON record for product"""
+    product = access.getProductByName(name)
+    product.category_name = access.getCategory(product.category_id)
+    return jsonify(Items=[product.serialize])
+
+
+@app.route('/catalog/add', methods=['GET', 'POST'])
 def addProduct():
+    """Add product to database"""
     categories = access.getCategories()
     if request.method == 'POST':
         product = models.ProductItem(
@@ -132,21 +158,80 @@ def addProduct():
         flash('Product Added %s' % product.product_name)
         access.session.add(product)
         access.session.commit()
-        return redirect(url_for('products'))
+        return redirect(url_for('categories'))
     else:
         return render_template('addProduct.html', categories=categories)
 
 
-@app.route('/login')
+@app.route('/category/add', methods=['GET', 'POST'])
+def addCategory():
+    """Add ability to create new category currently not implemented """
+    return "add category here"
+
+
+def make_external(url):
+    """Tiny function to make the url sensible for atom feed"""
+    return urljoin(request.url_root, url)
+
+
+@app.route('/catalog.atom')
+def recent_feed():
+    feed = AtomFeed('Recent Products',
+                    feed_url=request.url, url=request.url_root)
+    categories = access.getCategories()
+    productItems = access.getProductCount(15)
+    for product in productItems:
+        product.category_name = access.getCategory(product.category_id)
+        feed.add(product.product_name, unicode(product.product_description),
+                 content_type='html',
+                 author=product.user_id,
+                 url=make_external(url_for('getProduct', name=product.product_name)),  # noqa
+                 updated=product.updated or product.created,
+                 published=product.created)
+    return feed.get_response()
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
+    if request.method == 'POST':
+        if access.checkLogin(request.form['username'],
+                             request.form['password']):
+            flash(u'Successfully logged in as %s' % request.form['username'])
+            login_session['email'] = request.form['username']
+            login_session['logged_in'] = 'true'
+            login_session['local'] = 'true'
+            return redirect(url_for('products'))
+        else:
+            flash(u'Login as %s failed - please check and try again' % request.form['username'])  # noqa
+            return render_template('login.html', STATE=state)
     return render_template('login.html', STATE=state)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        if access.userExists(request.form['username']):
+            flash(u'User %s already exists!  Please login' % request.form['username'])  # noqa
+            return redirect(url_for('showLogin'))
+        user = models.User(username=request.form['username'],
+         password=generate_password_hash(request.form['password']))  # noqa
+        access.session.add(user)
+        access.session.commit()
+        login_session['email'] = request.form['username']
+        login_session['logged_in'] = 'true'
+        login_session['local'] = 'true'
+        flash('User %s successfully registered' % request.form['username'])
+        return redirect(url_for('products'))
+    else:
+        return render_template('register.html')
 
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """Login to google, and authenticate"""
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -233,31 +318,43 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
-    access_token = login_session['access_token']
-    print 'In gdisconnect access token is %s', access_token
-    print 'User name is: '
-    print login_session['username']
-    if access_token is None:
-        print 'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']  # NOQA
-    h = httplib2.Http()
-    result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
-    if result['status'] == '200':
-        del login_session['access_token']
-        del login_session['gplus_id']
-        del login_session['username']
+    if login_session['local']:
         del login_session['email']
-        del login_session['picture']
         del login_session['logged_in']
+        del login_session['local']
         flash('Successfully Disconnected')
         return redirect(url_for('products'))
     else:
-        response = make_response(json.dumps(
-            'Failed to revoke token for given user.', 400))
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        """Remove Gplus login"""
+        access_token = login_session['access_token']
+        print 'In gdisconnect access token is %s', access_token
+        print 'User name is: '
+        print login_session['username']
+        if access_token is None:
+            print 'Access Token is None'
+            response = make_response(json.dumps('Current user not connected.'), 401)  # noqa
+            response.headers['Content-Type'] = 'application/json'
+            return response
+        url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']  # NOQA
+        h = httplib2.Http()
+        result = h.request(url, 'GET')[0]
+        print 'result is '
+        print result
+        if result['status'] == '200':
+            del login_session['access_token']
+            del login_session['gplus_id']
+            del login_session['username']
+            del login_session['email']
+            del login_session['picture']
+            del login_session['logged_in']
+            flash('Successfully Disconnected')
+            return redirect(url_for('products'))
+        else:
+            del login_session['access_token']
+            del login_session['gplus_id']
+            del login_session['username']
+            del login_session['email']
+            del login_session['picture']
+            del login_session['logged_in']
+            flash('Error occurred with Disconnection')
+            return redirect(url_for('products'))

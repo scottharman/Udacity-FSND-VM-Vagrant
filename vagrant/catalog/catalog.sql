@@ -21,18 +21,19 @@ CREATE TABLE products (
     product_description TEXT NOT NULL DEFAULT '',
     price NUMERIC(12,2),
     user_id TEXT DEFAULT NULL,
-    created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMPTZ DEFAULT NULL
 );
 
 /* Not currently implemented. Saving for fully local authentication */
-/*
+
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username TEXT,
     password TEXT,
-    registered TIMESTAMP
+    registered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-*/
+
 
 INSERT INTO category (category_name, category_description) VALUES
     ('Pool Equipment', 'Category for Pool Equipment'),

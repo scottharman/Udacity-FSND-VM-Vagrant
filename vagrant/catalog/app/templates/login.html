@@ -54,4 +54,10 @@ function signInCallback(authResult) {
 
   }); } }
 </script>
+<form class="form-horizontal" action="{{ url_for('showLogin')}}" method = "POST">
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+<input type=submit value=Login>
+</form>
+
 {% endblock %}

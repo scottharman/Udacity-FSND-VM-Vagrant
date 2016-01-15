@@ -20,24 +20,25 @@
 
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
+    <link href="{{ url_for('recent_feed') }}"
+      rel="alternate"
+      title="Recent Products"
+      type="application/atom+xml">
 </head>
 <body>
     <header>
         <h1>{% block page %}{% endblock %}</h1>
     </header>
     <nav><span class="nav">
-        <a href="{{ url_for('homepage') }}">Home</a>
+        <a href="{{ url_for('products') }}">Products</a>
         &nbsp|&nbsp
-        <a href="{{ url_for('products') }}">Product View</a>
-        &nbsp|&nbsp
-        <a href="{{ url_for('categories') }}">Category View</a>
+        <a href="{{ url_for('categories') }}">Catalog</a>
         {% if session.logged_in %}
         &nbsp|&nbsp
         <a href="{{ url_for('addProduct') }}">Add Product</a>{% endif %}
-    </span>{% if not session.logged_in %} <span class="user"><a href="{{ url_for('showLogin') }}">Login</a></span>{% else %}
+    </span>{% if not session.logged_in %} <span class="user"><a href="{{ url_for('register') }}">Register</a>&nbsp|&nbsp<a href="{{ url_for('showLogin') }}">Login</a></span>{% else %}
     <span class="user"><a href="{{ url_for('gdisconnect') }}">Logout</a></span>{% endif %}
 </nav>
-
 
 
 {% with messages = get_flashed_messages() %}

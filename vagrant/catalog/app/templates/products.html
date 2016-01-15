@@ -13,18 +13,16 @@
 {% for category in categories %}
 <div class="box">
 <div class="columnleft"><ul style="list-style-type:none">
-<ul><a href="{{ url_for('categories', id = category.category_id) }}">{{ category.category_name }}</a></ul>
+<ul><a href="{{ url_for('categories', name = category.category_name) }}">{{ category.category_name }} ({{category.count}})</a></ul>
 </div>
 <div class="columnright">
 <dl>
 {% for product in products if product.category_id == category.category_id %}
 
- <dt>Name: {{ product.product_name }} &nbsp|&nbsp Price: {{ product.price }}</dt>
+ <dt><a href="{{ url_for('getProduct', name = product.product_name) }}">{{ product.product_name }} &nbsp|&nbsp Price: {{ product.price }}</a>{% if session.email == product.user_id %}&nbsp|&nbsp<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit/Delete {{ product.product_name }}</a>{% endif %}</dt>
  <dd>
  {{ product.product_description }}
-</br>
-<a href="{{ url_for('getProduct', name = product.product_name) }}">Product View</a>
-{% if session.email == product.user_id %}&nbsp|&nbsp<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit/Delete {{ product.product_name }}</a>{% endif %}</dd>
+</dd>
 
 
 {% endfor %}

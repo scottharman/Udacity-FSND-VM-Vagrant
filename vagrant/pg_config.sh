@@ -30,6 +30,7 @@ su vagrant -c 'createdb forum'
 su vagrant -c 'createdb catalog'
 #su vagrant -c 'psql -f /vagrant/tournament/tournament.sql'
 su vagrant -c 'psql forum -f /vagrant/forum/forum.sql'
+su vagrant -c 'psql catalog -f /vagrant/catalog/catalog.sql'
 sudo sed -i "/listen_addresses/c\listen_addresses = '*'" /etc/postgresql/9.3/main/postgresql.conf
 sudo sed -i '1,/^host/s/^host/host\t\tall\t\tall\t\t0.0.0.0\/0\t\ttrust\n#host/' /etc/postgresql/9.3/main/pg_hba.conf
 sudo /etc/init.d/postgresql reload

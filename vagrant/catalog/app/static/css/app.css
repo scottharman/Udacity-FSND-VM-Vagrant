@@ -77,7 +77,7 @@ nav {
 a {
     font-style: oblique;
     font-weight: bold;
-    color: #444;
+    color: Navy;
     line-height: 1.5em;
 }
 
@@ -153,7 +153,7 @@ footer {
 }
 
 .box dt {
-    color: #c50000;
+    color: Orange;
         line-height: 1.4em;
 }
 
@@ -164,10 +164,10 @@ footer {
         line-height: 1.4em;
 }
 
-.box .columnleft a {
+.box .columnright a {
     font-style: normal;
     font-weight: bold;
-    color: #999;
+    color: MidnightBlue;
     line-height: 1.4em;
 
 }
@@ -176,9 +176,9 @@ footer {
 
 
 .box .columnright a {
-    color: #c34500;
-        line-height: 1.1em;
-        font-size: 0.9em;
+    color: MidnightBlue;
+    line-height: 1.1em;
+    font-size: 0.9em;
 }
 
 .nav {

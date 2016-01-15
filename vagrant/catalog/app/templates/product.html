@@ -20,7 +20,7 @@
  <dd>Description:</br>
  {{ product.product_description }}</dd>
 </br>
-
+<a href="{{ url_for('product_json', name = product.product_name) }}">JSON: {{ product.product_name }}</a>
 {% if session.email == product.user_id %}<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit/Delete {{ product.product_name }}</a>{% endif %}
 
 
