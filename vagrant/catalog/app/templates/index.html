@@ -33,6 +33,8 @@
         <a href="{{ url_for('products') }}">Products</a>
         &nbsp|&nbsp
         <a href="{{ url_for('categories') }}">Catalog</a>
+        &nbsp|&nbsp
+        <a href="{{ url_for('json_products') }}">JSON Catalog</a>
         {% if session.logged_in %}
         &nbsp|&nbsp
         <a href="{{ url_for('addProduct') }}">Add Product</a>{% endif %}

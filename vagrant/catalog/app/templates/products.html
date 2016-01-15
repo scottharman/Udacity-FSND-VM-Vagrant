@@ -13,7 +13,7 @@
 {% for category in categories %}
 <div class="box">
 <div class="columnleft"><ul style="list-style-type:none">
-<ul><a href="{{ url_for('categories', name = category.category_name) }}">{{ category.category_name }} ({{category.count}})</a></ul>
+<ul><a href="{{ url_for('categories', name = category.category_name) }}">{{ category.category_name }} ({{category.count}})</a></br>&nbsp<a href="{{ url_for('category_json', name = category.category_name) }}">JSON</a></ul>
 </div>
 <div class="columnright">
 <dl>

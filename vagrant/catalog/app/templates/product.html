@@ -11,7 +11,8 @@
 </br>
 <div class="box">
 <div class="columnleft">
-<h3>{{ product.product_name }} ({{ product.category }})</h3>
+<h3>{{ product.product_name }} ({{ product.category }})
+</h3><a href="{{ url_for('category_json', name = product.category) }}">JSON</a>
 </div>
 <div class="columnright">
 <dl>
