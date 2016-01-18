@@ -61,4 +61,4 @@ INSERT INTO products (category_id,product_name,product_description,price,user_id
 
 INSERT INTO products (category_id, product_name, product_description, price) VALUES (1,'Dummy', 'Dummy with no owner','25.15'),(2,'Dummy','Dummy with no owners','15.15'),(3,'Dummy','Another dummy','1.10');
 
-INSERT INTO products (category_id, product_name, product_description, price, user_id, product_image) VALUES (    (1,'Dive Sticks','Basic Dive Sticks (Image Test)','65.65','scott@harman.tv','sticks.jpg');
+INSERT INTO products (category_id, product_name, product_description, price, user_id, product_image) VALUES (1,'Dive Sticks','Basic Dive Sticks (Image Test)','65.65','scott@harman.tv','sticks.jpg');

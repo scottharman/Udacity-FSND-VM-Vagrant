@@ -39,8 +39,7 @@
             <input type="submit" value="Delete" formaction="{{ url_for('deleteProduct', name = product.product_name) }}">
         </form>
     </div>
-    {% if product.product_image %}
-    <img src="{{ url_for('static', filename=product.product_url) }}" style="max-width:400px; max-height:400px;" /> {% endif %}
+
 </div>
 {% else %}
 <div class="row">
