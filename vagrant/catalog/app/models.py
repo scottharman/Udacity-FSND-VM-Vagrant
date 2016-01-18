@@ -21,7 +21,7 @@ class Category(Base):
     """The category of objects avaiable"""
     __tablename__ = 'category'
     category_id = Column(Integer, primary_key=True)
-    category_name = Column(String(50), nullable=False)
+    category_name = Column(String(50), nullable=False, unique=True)
     category_description = Column(String(120), nullable=True)
 
     def getID(self):
@@ -47,10 +47,11 @@ class ProductItem(Base):
     """Product items"""
     __tablename__ = 'products'
     product_id = Column(Integer, primary_key=True)
-    product_name = Column(String(80), nullable=False)
+    product_name = Column(String(80), nullable=False, unique=True)
     product_description = Column(String(120))
     product_image = Column(String(120))
-    category_id = Column(Integer, ForeignKey('category.category_id'))
+    category_id = Column(Integer, ForeignKey('category.category_id',
+                                             ondelete='CASCADE'))
     price = Column(Numeric(12, 2))
     user_id = Column(String(80), nullable=False)
     created = Column(DateTime(timezone=True))

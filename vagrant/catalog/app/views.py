@@ -4,6 +4,7 @@ from flask import flash, make_response
 from werkzeug.contrib.atom import AtomFeed
 from werkzeug.security import generate_password_hash
 from werkzeug import secure_filename
+from flask.ext.seasurf import SeaSurf
 
 from flask import session as login_session
 import random
@@ -17,6 +18,7 @@ import requests
 from urlparse import urljoin
 from datetime import datetime
 from functools import wraps
+csrf = SeaSurf(app)
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -24,6 +26,7 @@ APPLICATION_NAME = "Udacity Catalog Project"
 UPLOAD_FOLDER = '/vagrant/catalog/app/static/uploads'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'JPG'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 
 def login_required(f):
@@ -87,7 +90,7 @@ def products():
 # Switch product global view to category, then add counters per category
 @app.route('/catalog')
 @app.route('/catalog/')
-@app.route('/catalog/<name>/items')
+@app.route('/catalog/<path:name>/items')
 def categories(name=''):
     """Returns the last 5 products for each category"""
     """Should have two panels - LHS lists categories, and initial RHS view lists
@@ -124,7 +127,7 @@ def json_products():
     return jsonify(Category=[i.serialize for i in categories])
 
 
-@app.route('/catalog/<name>/items/json')
+@app.route('/catalog/<path:name>/items/json')
 def category_json(name):
     productItems = []
     categories = access.getCategories()
@@ -136,7 +139,7 @@ def category_json(name):
     return jsonify(Category=[i.serialize for i in categories])
 
 
-@app.route('/catalog/<name>/')
+@app.route('/catalog/<path:name>/')
 def getProduct(name):
     product = access.getProductByName(name)
     if product.product_image:
@@ -145,7 +148,7 @@ def getProduct(name):
     return render_template('product.html', product=product)
 
 
-@app.route('/catalog/<name>/edit/', methods=['GET', 'POST'])
+@app.route('/catalog/<path:name>/edit/', methods=['GET', 'POST'])
 @login_owner
 def editProduct(name):
     categories = access.getCategories()
@@ -173,7 +176,7 @@ def editProduct(name):
                                categories=categories)
 
 
-@app.route('/catalog/<name>/delete/', methods=['GET', 'POST'])
+@app.route('/catalog/<path:name>/delete/', methods=['GET', 'POST'])
 @login_owner
 def deleteProduct(name):
     """Delete defined product if you are the user who owns it"""
@@ -192,7 +195,7 @@ def deleteProduct(name):
         return redirect(url_for('products'))
 
 
-@app.route('/catalog/<name>/json')
+@app.route('/catalog/<path:name>/json')
 def product_json(name):
     """Display JSON record for product"""
     product = access.getProductByName(name)
@@ -207,6 +210,7 @@ def addProduct():
     categories = access.getCategories()
     if request.method == 'POST':
         product_image = request.files['product_image']
+        filename = ''
         if product_image and allowed_file(product_image.filename):
             filename = secure_filename(product_image.filename)
             product_image.save(os.path.join(app.config['UPLOAD_FOLDER'],
@@ -295,9 +299,10 @@ def register():
         return render_template('register.html')
 
 
+@csrf.exempt
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    """Login to google, and authenticate"""
+    """Login to google, and authenticate - added csrf exemption"""
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
