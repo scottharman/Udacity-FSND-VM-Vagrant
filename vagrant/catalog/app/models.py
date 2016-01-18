@@ -49,6 +49,7 @@ class ProductItem(Base):
     product_id = Column(Integer, primary_key=True)
     product_name = Column(String(80), nullable=False)
     product_description = Column(String(120))
+    product_image = Column(String(120))
     category_id = Column(Integer, ForeignKey('category.category_id'))
     price = Column(Numeric(12, 2))
     user_id = Column(String(80), nullable=False)

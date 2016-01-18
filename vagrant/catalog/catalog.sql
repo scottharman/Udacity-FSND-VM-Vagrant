@@ -22,7 +22,8 @@ CREATE TABLE products (
     price NUMERIC(12,2),
     user_id TEXT DEFAULT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated TIMESTAMP DEFAULT NULL
+    updated TIMESTAMP DEFAULT NULL,
+    product_image TEXT DEFAULT NULL
 );
 
 /* Not currently implemented. Saving for fully local authentication */
@@ -59,3 +60,5 @@ INSERT INTO products (category_id,product_name,product_description,price,user_id
     (3,'Nerf Guns','For bigger kids','25.35','bob@bob.com');
 
 INSERT INTO products (category_id, product_name, product_description, price) VALUES (1,'Dummy', 'Dummy with no owner','25.15'),(2,'Dummy','Dummy with no owners','15.15'),(3,'Dummy','Another dummy','1.10');
+
+INSERT INTO products (category_id, product_name, product_description, price, user_id, product_image) VALUES (    (1,'Dive Sticks','Basic Dive Sticks (Image Test)','65.65','scott@harman.tv','sticks.jpg');

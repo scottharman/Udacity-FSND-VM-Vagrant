@@ -3,11 +3,12 @@ from flask import Flask, render_template, request, redirect, jsonify, url_for
 from flask import flash, make_response
 from werkzeug.contrib.atom import AtomFeed
 from werkzeug.security import generate_password_hash
+from werkzeug import secure_filename
 
 from flask import session as login_session
 import random
 import string
-
+import os
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -20,6 +21,9 @@ from functools import wraps
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Udacity Catalog Project"
+UPLOAD_FOLDER = '/vagrant/catalog/app/static/uploads'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'JPG'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def login_required(f):
@@ -51,6 +55,12 @@ def login_owner(f):
     return decorated_function
 
 
+def allowed_file(filename):
+    """Test to see if the filetype is allowed"""
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
 @app.route('/')
 @app.route('/products')
 def products():
@@ -68,6 +78,8 @@ def products():
         productItems += access.getProductCountCategory(category.category_id, 5)
     for product in productItems:
         product.category_name = access.getCategory(product.category_id)
+        if product.product_image:
+            product.product_url = 'uploads/' + product.product_image
     return render_template('products.html', categories=categories,
                            products=productItems)
 
@@ -94,6 +106,8 @@ def categories(name=''):
             productItems += access.getProductCategory(category.category_id)
     for product in productItems:
         product.category = access.getCategory(product.category_id)
+        if product.product_image:
+            product.product_url = 'uploads/' + product.product_image
     for category in categories:
         category.count = access.countItemsByCategory(category.category_name)
     return render_template('products.html', categories=categories,
@@ -125,6 +139,8 @@ def category_json(name):
 @app.route('/catalog/<name>/')
 def getProduct(name):
     product = access.getProductByName(name)
+    if product.product_image:
+        product.product_url = 'uploads/' + product.product_image
     product.category = access.getCategory(product.category_id)
     return render_template('product.html', product=product)
 
@@ -134,8 +150,16 @@ def getProduct(name):
 def editProduct(name):
     categories = access.getCategories()
     product = access.getProductByName(name)
+    if product.product_image:
+        product.product_url = '/uploads/', product.product_image
     product.category = access.getCategory(product.category_id)
     if request.method == 'POST':
+        product_image = request.files['product_image']
+        if product_image and allowed_file(product_image.filename):
+            filename = secure_filename(product_image.filename)
+            product_image.save(os.path.join(app.config['UPLOAD_FOLDER'],
+                                            filename))
+        product.product_image = filename
         product.product_name = request.form['product_name']
         product.price = request.form['price']
         product.product_description = request.form['product_description']
@@ -182,9 +206,15 @@ def addProduct():
     """Add product to database"""
     categories = access.getCategories()
     if request.method == 'POST':
+        product_image = request.files['product_image']
+        if product_image and allowed_file(product_image.filename):
+            filename = secure_filename(product_image.filename)
+            product_image.save(os.path.join(app.config['UPLOAD_FOLDER'],
+                                            filename))
         product = models.ProductItem(
             product_name=request.form['product_name'],
             price=request.form['price'],
+            product_image=filename,
             product_description=request.form['product_description'],
             category_id=request.form['category_id'],
             user_id=login_session['email'],

@@ -13,7 +13,7 @@
 
 </div>
 <div class="row">
-    <form class="form-horizontal" action="{{ url_for('addProduct')}}" method = "POST">
+    <form class="form-horizontal" action="{{ url_for('addProduct')}}" method = "POST" enctype="multipart/form-data">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <h3>Add New Product</h3>
@@ -37,6 +37,8 @@
                   <div class="col-sm-10">
             <textarea name="product_description" class="form-control" rows=5 cols=40></textarea>
                   </div>
+      <div class="col-sm-10">
+<label for="product_image"><input type=file name="product_image"></div>
         </div>
             <input type="submit" value="Add New">
 

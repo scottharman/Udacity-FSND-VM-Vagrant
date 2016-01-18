@@ -22,6 +22,8 @@
  <dt><a href="{{ url_for('getProduct', name = product.product_name) }}">{{ product.product_name }} &nbsp|&nbsp Price: {{ product.price }}</a>{% if session.email == product.user_id %}&nbsp|&nbsp<a href="{{ url_for('editProduct', name = product.product_name) }}">Edit/Delete {{ product.product_name }}</a>{% endif %}</dt>
  <dd>
  {{ product.product_description }}
+ {% if product.product_image %}
+ <img src="{{ url_for('static', filename=product.product_url) }}" style="max-width:50px; max-height:50px;" /> {% endif %}
 </dd>
 
 
