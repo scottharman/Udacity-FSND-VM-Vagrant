@@ -15,5 +15,8 @@ JSON endpoints have been provided for the whole database, at catalog.json, for e
 
 and an ATOM feed is available at /catalog.atom
 
+## Image support and CSRF
+These have both been implemented - seasurf is really nifty Image support is more tricky, and I'm not 100% happy with the current implementation any recommendations would be most welcome.
+
 ### Issues and comments:
 Had difficulty with understanding the json constructs, and ultimately found the solution on stackoverflow ([http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask](http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask)) It still doesn't render quite the way I'd like, and can't work out why. Unfortunately I am travelling again this week, so will do a final commit when time permits and will have to live with the issues.

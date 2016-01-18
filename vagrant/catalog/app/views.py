@@ -159,7 +159,7 @@ def editProduct(name):
             filename = secure_filename(product_image.filename)
             product_image.save(os.path.join(app.config['UPLOAD_FOLDER'],
                                             filename))
-        product.product_image = filename
+            product.product_image = filename
         product.product_name = request.form['product_name']
         product.price = request.form['price']
         product.product_description = request.form['product_description']
