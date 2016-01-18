@@ -55,6 +55,7 @@ function signInCallback(authResult) {
   }); } }
 </script>
 <form class="form-horizontal" action="{{ url_for('showLogin')}}" method = "POST">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     <input type="text" name="username" />
     <input type="password" name="password" />
 <input type=submit value=Login>

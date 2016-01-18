@@ -16,6 +16,7 @@ sudo pip install --upgrade flask-openid
 sudo pip install --upgrade flask-mail
 sudo pip install --upgrade flask-sqlalchemy
 sudo pip install --upgrade sqlalchemy-migrate
+sudo pip install --upgrade flask-seasurf
 sudo pip install --upgrade flask-whooshalchemy
 sudo pip install --upgrade flask-wtf
 sudo pip install --upgrade wtforms-alchemy

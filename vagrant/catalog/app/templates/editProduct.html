@@ -15,6 +15,7 @@
 {% if session.email == product.user_id %}
 <div class="row">
     <form action="{{ url_for('editProduct', name = product.product_name)}}" method = "POST">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label for="product_name">Name</label>
             <input type="text" class="form-control" name="product_name" value="{{ product.product_name }}">

@@ -15,10 +15,40 @@ import json
 import requests
 from urlparse import urljoin
 from datetime import datetime
+from functools import wraps
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Udacity Catalog Project"
+
+
+def login_required(f):
+    """Test to see if user is logged in and has a valid session"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'email' not in login_session:
+            return redirect(url_for('showLogin', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def login_owner(f):
+    """Test to see if the current user is the owner of the object"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'name' in kwargs:
+            name = kwargs.get('name')
+        else:
+            return redirect(url_for('showLogin', next=request.url))
+        if 'email' not in login_session:
+            flash('User not logged in')
+            return redirect(url_for('showLogin', next=request.url))
+        elif login_session['email'] != access.getProductOwner(name):
+            flash('%s is not owner of %s' % (login_session['email'],
+                  name))
+            return redirect(url_for('showLogin', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route('/')
@@ -100,6 +130,7 @@ def getProduct(name):
 
 
 @app.route('/catalog/<name>/edit/', methods=['GET', 'POST'])
+@login_owner
 def editProduct(name):
     categories = access.getCategories()
     product = access.getProductByName(name)
@@ -109,7 +140,7 @@ def editProduct(name):
         product.price = request.form['price']
         product.product_description = request.form['product_description']
         product.category_id = request.form['category_id']
-        product.updated = datetime.utcnow()
+        product.updated = datetime.now()
         flash('Product Edited %s' % product.product_name)
         access.session.commit()
         return redirect(request.referrer)
@@ -119,9 +150,10 @@ def editProduct(name):
 
 
 @app.route('/catalog/<name>/delete/', methods=['GET', 'POST'])
+@login_owner
 def deleteProduct(name):
     """Delete defined product if you are the user who owns it"""
-    product = access.getProductbyName(id)
+    product = access.getProductByName(name)
     product.category = access.getCategory(product.category_id)
     if login_session['email'] == product.user_id:
         if request.method == 'POST':
@@ -145,6 +177,7 @@ def product_json(name):
 
 
 @app.route('/catalog/add', methods=['GET', 'POST'])
+@login_required
 def addProduct():
     """Add product to database"""
     categories = access.getCategories()
@@ -154,7 +187,9 @@ def addProduct():
             price=request.form['price'],
             product_description=request.form['product_description'],
             category_id=request.form['category_id'],
-            user_id=login_session['email'])
+            user_id=login_session['email'],
+            created=datetime.now(),
+            updated=datetime.now())
         flash('Product Added %s' % product.product_name)
         access.session.add(product)
         access.session.commit()
@@ -164,6 +199,7 @@ def addProduct():
 
 
 @app.route('/category/add', methods=['GET', 'POST'])
+@login_required
 def addCategory():
     """Add ability to create new category currently not implemented """
     return "add category here"
@@ -318,7 +354,7 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
-    if login_session['local']:
+    if 'local' in login_session:
         del login_session['email']
         del login_session['logged_in']
         del login_session['local']

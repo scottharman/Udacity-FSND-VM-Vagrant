@@ -21,8 +21,8 @@ CREATE TABLE products (
     product_description TEXT NOT NULL DEFAULT '',
     price NUMERIC(12,2),
     user_id TEXT DEFAULT NULL,
-    created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated TIMESTAMPTZ DEFAULT NULL
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT NULL
 );
 
 /* Not currently implemented. Saving for fully local authentication */

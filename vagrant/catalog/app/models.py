@@ -52,8 +52,8 @@ class ProductItem(Base):
     category_id = Column(Integer, ForeignKey('category.category_id'))
     price = Column(Numeric(12, 2))
     user_id = Column(String(80), nullable=False)
-    created = Column(DateTime)
-    updated = Column(DateTime)
+    created = Column(DateTime(timezone=True))
+    updated = Column(DateTime(timezone=True))
 
     @property
     def serialize(self):
